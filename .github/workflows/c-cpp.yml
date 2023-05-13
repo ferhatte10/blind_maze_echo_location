@@ -17,5 +17,3 @@ jobs:
       run: make install
     - name: make build
       run: make build
-    - name: make run
-      run: make run
