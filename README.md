@@ -1,8 +1,4 @@
-<div style="text-align: center">
-
 # Blind Maze game with ```Echo location``` hearing
-
-</div>
 
 # Introduction
 
