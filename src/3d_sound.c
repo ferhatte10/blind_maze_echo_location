@@ -123,7 +123,7 @@ void *playSound(void* arg) {
     }
     
   
-    if (sound_p->type == 0 || sound_p->type == 2) {
+    if ((sound_p->type == 0 || sound_p->type == 2)) {
         // set the sound to loop
         alSourcei(sources[sound_p->type], AL_LOOPING, AL_TRUE);
     } 
@@ -132,6 +132,12 @@ void *playSound(void* arg) {
 
     // play the sound
     alSourcePlay(sources[sound_p->type]);
+
+    if(sound_p->playOnce){
+        // play the sound for 3 seconds then pause it
+        sleep(3);
+        alSourcePause(sources[sound_p->type]);
+    }
     
 
     // wait for the sound to finish playing
@@ -163,7 +169,11 @@ void pauseSound(int type)
 
 void resumeSound(int type)
 {
-    alSourcePlay(sources[type]);
+    // if the source is not playin resume it
+    ALint state;
+    alGetSourcei(sources[type], AL_SOURCE_STATE, &state);
+    if (state != AL_PLAYING)
+        alSourcePlay(sources[type]);
 }
 
 void setSpeedSound(int type, float speed)
@@ -174,20 +184,38 @@ void setSpeedSound(int type, float speed)
 
 void updateSoundPos(float x, float y, float distance){
     //Calculate the distance between the player and the exit:
-
+    /*
+    1 Calcul de la distance entre le joueur et la sortie :
+        dx représente la différence horizontale entre la position de la sortie et celle du joueur.
+        dy représente la différence verticale entre la position de la sortie et celle du joueur.
+    */
     float dx = x - p.x; // distance between the player and the exit
     float dy = y - p.y; // distance between the player and the exit
 
     //Calculate the direction from the player to the exit:
-
+    /*
+    2 Calcul de la direction du joueur vers la sortie :
+        dirX et dirY correspondent à la normalisation du vecteur formé par dx et dy. Cela signifie que les valeurs sont ajustées pour représenter une direction unitaire, indépendamment de la distance réelle entre le joueur et la sortie.
+    */
     float dirX = dx / distance; // normalize the vector
     float dirY = dy / distance; // normalize the vector
 
+    /*
+    3 Calcul de l'angle entre le joueur et la sortie :
+
+        anglePE est calculé en utilisant la fonction acos() pour trouver l'arc cosinus de dirX, qui représente la projection horizontale de la direction du joueur vers la sortie. La condition dirY < 0 permet de gérer les angles dans les quadrants supérieurs.
+        L'angle anglePE est utilisé pour déterminer l'angle du son en ajoutant l'angle de rotation du joueur (p.rotationAngle) et π/2 pour compenser l'orientation de l'écran (le coin supérieur gauche étant le point de référence).
+    */
     float anglePE = dirY < 0 ? acos(dirX) : 2 * M_PI - acos(dirX); // angle between the player and the exit
 
     float angleSound = anglePE + p.rotationAngle + M_PI / 2; // angle of the sound (inversed cause of the screen start at the top left corner)
 
     // rotate the position according to the player's orientation
+    /*
+    3 Rotation de la position du son en fonction de l'orientation du joueur :
+        SoundX et SoundY représentent les nouvelles coordonnées de la source sonore après avoir tourné les coordonnées initiales selon l'angle angleSound.
+        Ces coordonnées sont calculées en utilisant les fonctions trigonométriques cos() et sin() respectivement, multipliées par la distance entre le joueur et la sortie.
+    */
     SoundX = cos(angleSound) * distance;
     SoundY = sin(angleSound) * distance;
 }

@@ -111,15 +111,16 @@ int main(void)
     
 			strcpy(tp.title, "Welcome to the Blind Maze Game!");
 			strcpy(tp.subTitles[0], "The goal is to find the exit using the echo location.");
-			strcpy(tp.subTitles[1], "Use Z to move forward");
-			strcpy(tp.subTitles[2], "Use S to move backward");
-			strcpy(tp.subTitles[3], "Use D to turn around right");
-			strcpy(tp.subTitles[4], "Use Q to turn around left");
-			strcpy(tp.subTitles[5], "Use arrow keys to hear walls around you");
-			strcpy(tp.subTitles[6], "Use H to display (toggle) the maze");
-			strcpy(tp.subTitles[7], "Use ESC to quit the game");
-			strcpy(tp.subTitles[8], "Copyright - Ferhat - Zakaria - Abir IAI2-2023");
-			tp.numSubTexts = 9;
+			strcpy(tp.subTitles[1], "Use Z (+ shift to speed up) to move forward");
+			strcpy(tp.subTitles[2], "Use S (+ shift to speed up) to move backward");
+			strcpy(tp.subTitles[3], "Use D (+ shift to speed up) to turn around right");
+			strcpy(tp.subTitles[4], "Use Q (+ shift to speed up) to turn around left");
+			strcpy(tp.subTitles[5], "Use E to hear the direction of the exit for 3sc");
+			strcpy(tp.subTitles[6], "Use arrow keys to hear walls around you");
+			strcpy(tp.subTitles[7], "Use H to display (toggle) the maze");
+			strcpy(tp.subTitles[8], "Use ESC to quit the game");
+			strcpy(tp.subTitles[9], "Copyright - Ferhat - Zakaria - Abir IAI2-2023");
+			tp.numSubTexts = 10;
 			renderText(instance, tp);
 		}
 		

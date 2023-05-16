@@ -10,6 +10,7 @@ int up_key_pressed = 0;
 int down_key_pressed = 0;
 int left_key_pressed = 0;
 int right_key_pressed = 0;
+bool e_pressed = false;
 
 /**
 * poll_events - getting quit event
@@ -43,6 +44,7 @@ int poll_events(void)
 						sound_p->soundX = 0;
 						sound_p->soundY = 0;
 						sound_p->gain = 0.5f;
+						sound_p->playOnce = false;
 
 						pthread_create(&thread, NULL, playSound, (void *) sound_p);
 					}
@@ -63,6 +65,7 @@ int poll_events(void)
 							sound_p->soundX = 0;
 							sound_p->soundY = 0;
 							sound_p->gain = 0.5f;
+							sound_p->playOnce = false;
 
 							pthread_create(&thread, NULL, playSound, (void *) sound_p);
 
@@ -114,6 +117,34 @@ int poll_events(void)
 					p.walkSpeed = 200;
 					p.turnSpeed = 80 * (M_PI / 180);
 				}
+				if (event.key.keysym.sym == SDLK_e)
+				{
+					if (!e_pressed){
+						e_pressed = true;
+
+						if (!(p.x >= TILE_SIZE-10 && p.x <= 2 * TILE_SIZE  && p.y > TILE_SIZE && p.y<= TILE_SIZE * (MAP_NUM_ROWS-1))
+							 && !(p.y >= 6 * TILE_SIZE && p.y <= 7 * TILE_SIZE && p.x >= 0 && p.x <= TILE_SIZE))
+						{
+							
+							SoundP *sound_p = malloc(sizeof(SoundP));
+
+							sound_p->type = 2; // type of the sound (exit)
+
+							sound_p->soundX = xE;
+							sound_p->soundY = yE;
+							sound_p->distance = distanceBetweenPoints(p.x, p.y, xE, yE);
+							sound_p->gain = 1.0f;
+							sound_p->playOnce = true;
+
+							system("clear");
+							printf("Helping you ... Hear well the direction and be smart...\n");
+							pthread_t t2;
+							pthread_create(&t2, NULL, playSound, (void *) sound_p);
+						}
+					}
+					
+				}
+				
 				
 				break;
 			}
@@ -125,7 +156,7 @@ int poll_events(void)
 					if (walking == 1)
 					{
 						walking = 0;
-						stopSound(0);
+						pauseSound(0);
 						pthread_join(thread, NULL);
 					}
 				}
@@ -135,7 +166,7 @@ int poll_events(void)
 						if (walking == 1)
 						{
 							walking = 0;
-							stopSound(0);
+							pauseSound(0);
 							pthread_join(thread, NULL);
 						}
 					}
@@ -178,7 +209,10 @@ int poll_events(void)
 					p.walkSpeed = 100;
 					p.turnSpeed = 45 * (M_PI / 180);
 				}
-				
+				if (event.key.keysym.sym == SDLK_e)
+				{
+					e_pressed = false;
+				}
 
 				break;
 			}

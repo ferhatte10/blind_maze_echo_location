@@ -22,5 +22,8 @@
 #define BACK  2
 #define LEFT  3
 
+#define yE (6 * TILE_SIZE  + (TILE_SIZE/2)) // y coordinate of the center of the exit
+#define xE 0 // x coordinate of the center of the exit
+
 
 #endif /* _GLOBAL_ */

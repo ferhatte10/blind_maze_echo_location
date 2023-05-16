@@ -76,18 +76,10 @@ void movePlayer(float deltaTime)
     newPlayerX = p.x + cos(p.rotationAngle) * moveStep;
     newPlayerY = p.y + sin(p.rotationAngle) * moveStep;
     
-    float yE = 6 * TILE_SIZE  + (TILE_SIZE/2); // y coordinate of the center of the exit
-    float xE =  0 ;// x coordinate of the center of the exit
-
-    // float ySeuil = 8 * TILE_SIZE + (TILE_SIZE/2);
-    // float xSeuil = 1 * TILE_SIZE + (TILE_SIZE/2);
-
     float distancePES = distanceBetweenPoints(newPlayerX, newPlayerY, xE, yE); // distance between player and exit
-    // float distanceSeuil = distanceBetweenPoints(xE, yE,xSeuil, ySeuil);
 
-    bool is_in_coridor = newPlayerX > TILE_SIZE - 5 && newPlayerX < 2 * TILE_SIZE + 5 && newPlayerY > TILE_SIZE + 5 && newPlayerY <= TILE_SIZE * (MAP_NUM_ROWS-1);
-    bool is_in_exit_tail = (p.y >= 6 * TILE_SIZE && p.x <= 7 * TILE_SIZE && p.x >= 0 && p.x <= TILE_SIZE);
-    bool won = (p.y >= 6 * TILE_SIZE && p.x <= 7 * TILE_SIZE && p.x >= 0 && p.x <= TILE_SIZE/2);
+    bool is_in_coridor = p.x >= TILE_SIZE-10 && p.x <= 2 * TILE_SIZE  && p.y > TILE_SIZE && p.y<= TILE_SIZE * (MAP_NUM_ROWS-1);
+    bool is_in_exit_tail = (newPlayerY >= 6 * TILE_SIZE && newPlayerY <= 7 * TILE_SIZE && newPlayerX >= 0 && newPlayerX <= TILE_SIZE);
     
     if (is_in_coridor || is_in_exit_tail) // if player is in the coridor near the exit
     {
@@ -98,7 +90,8 @@ void movePlayer(float deltaTime)
         sound_p->soundX = xE;
         sound_p->soundY = yE;
         sound_p->distance = distancePES;
-        sound_p->gain = 1.0f;       
+        sound_p->gain = 1.0f;
+        sound_p->playOnce = false;       
 
         if (!is_near)
         {
@@ -133,12 +126,18 @@ void movePlayer(float deltaTime)
         p.x = newPlayerX;
         p.y = newPlayerY;
         
+        bool won = (p.y >= 6 * TILE_SIZE && p.x <= 7 * TILE_SIZE && p.x >= 0 && p.x <= TILE_SIZE/2);
+
         if (won) // if player enters to the exit case
         {
             WIN = 1;
         }
 
-        hit = 0;   
+        hit = 0;
+        if (walking)
+        {
+            resumeSound(0);
+        }
 
     } else {
         //thread to play soun wall
@@ -156,6 +155,7 @@ void movePlayer(float deltaTime)
            
 
             sound_w->gain = 1.0f;
+            sound_w->playOnce = false;
 
 
 			pthread_create(&t_wall, NULL, playSound, (void *) sound_w);
@@ -205,6 +205,7 @@ void SoundmapHasWallAtDirection(int direction){
            
 
             sound_w->gain = 1.0f;
+            sound_w->playOnce = false;
 
 
 			pthread_create(&t_wall, NULL, playSound, (void *) sound_w);

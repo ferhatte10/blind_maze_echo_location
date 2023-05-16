@@ -12,6 +12,7 @@ typedef struct SoundP {
     float distance; // the distance between the pos of player and sound
     float gain; // the volume of the sound
     int type; // the type of the sound
+    bool playOnce; // if the sound is played once
 } SoundP;
 
 void fatalError(char *state);

@@ -45,7 +45,7 @@ typedef struct textPrint {
 
 extern int ticksLastFrame;
 extern int WIN;
-extern int hit;
+extern int walking;
 extern int DEBUG;
 extern int deltaTime;
 
