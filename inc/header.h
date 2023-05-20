@@ -50,7 +50,6 @@ extern int DEBUG;
 extern int deltaTime;
 
 /* Functions */
-int   init_instance(SDL_Instance *);
 int   poll_events(void);
 void  renderMap(SDL_Instance instance);
 void  setupPlayer();

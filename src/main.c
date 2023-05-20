@@ -3,9 +3,11 @@
 #include "../inc/header.h"
 #include "3d_sound.h"
 
+
+/* Declaration of Global Variables */
+
 int WIN = 0;
 int DEBUG = 0;
-/* Declaration of Global Variables */
 
 const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -33,10 +35,6 @@ struct Player p;
 
 int ticksLastFrame;
 
-/**
-* main - main work
-* Return: always 0.
-*/
 int main(void)
 {
 	SDL_Instance instance;
@@ -83,7 +81,7 @@ int main(void)
 	setupPlayer(instance);
 
 	/* Main Game Loop */
-	while ("game is running")
+	while (true)
 	{
 		SDL_RenderClear(instance.renderer);
 		
@@ -109,7 +107,7 @@ int main(void)
 		}else{
 			struct textPrint tp;
     
-			strcpy(tp.title, "Welcome to the Blind Maze Game!");
+			strcpy(tp.title, 		"Welcome to the Blind Maze Game!");
 			strcpy(tp.subTitles[0], "The goal is to find the exit using the echo location.");
 			strcpy(tp.subTitles[1], "Use Z (+ shift to speed up) to move forward");
 			strcpy(tp.subTitles[2], "Use S (+ shift to speed up) to move backward");
@@ -125,17 +123,38 @@ int main(void)
 		}
 		
 
-		SDL_RenderPresent(instance.renderer);
 
 
-	 	// get out of the game loop once the player won
+	 	// get out of the game loop once the player won and render the winning screen
 		if (WIN == 1){
+
+			pauseSound(0);
+			pauseSound(1);
+
+			SDL_SetRenderDrawColor(instance.renderer, 0, 0, 0, 255);
+			SDL_RenderClear(instance.renderer);
+
+			struct textPrint tp2;
+    
+			strcpy(tp2.title, 		"Congratulations!");
+			strcpy(tp2.subTitles[0], "You found the exit!");
+			strcpy(tp2.subTitles[1], "Now you can get your autograph!");
+			strcpy(tp2.subTitles[2], "Copyright - Ferhat - Zakaria - Abir IAI2-2023");
+			tp2.numSubTexts = 3;
+			renderText(instance, tp2);
+			SDL_RenderPresent(instance.renderer);
+
 			system("clear");
 			printf("You won!\n");
+			sleep(4);
 			break;
 		}
+		
+		SDL_RenderPresent(instance.renderer);
+
 	}
 
+	/* Freeing sound Resources */
 	closeSoundDevice();
 
 	/* Render and Window destroy before quitting */

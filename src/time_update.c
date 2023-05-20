@@ -1,8 +1,8 @@
 #include "../inc/header.h"
 
 /**
- * update - updating
- * Return: nothing
+ * Update the game state.
+ * Return: void
  */
 void update(void)
 {

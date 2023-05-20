@@ -9,7 +9,9 @@ int hit = 0;
 
 pthread_t t_wall;
 
-
+/**
+ * Set up the player with initial values.
+ */
 void setupPlayer()
 {
     p.x = TILE_SIZE + TILE_SIZE/2 ;
@@ -23,6 +25,11 @@ void setupPlayer()
     p.turnSpeed = 45 * (M_PI / 180);
 }
 
+/**
+ * Render the player on the screen.
+ *
+ * @param instance The SDL_Instance structure containing the renderer.
+ */
 void renderPlayer(SDL_Instance instance)
 {
     SDL_SetRenderDrawColor(instance.renderer, 255, 255, 255, 255);
@@ -46,7 +53,13 @@ void renderPlayer(SDL_Instance instance)
     );
 }
 
-
+/**
+ * Check if the map has a wall at the specified position.
+ *
+ * @param x The X coordinate of the position.
+ * @param y The Y coordinate of the position.
+ * @return 1 if there is a wall at the position, 0 otherwise.
+ */
 int mapHasWallAt(float x, float y)
 {
     int mapGridIndexX, mapGridIndexY;
@@ -65,6 +78,11 @@ int mapHasWallAt(float x, float y)
 }
 
 
+/**
+ * Move the player based on the specified deltaTime.
+ *
+ * @param deltaTime The time elapsed since the last frame.
+ */
 void movePlayer(float deltaTime)
 {
     float moveStep, newPlayerX, newPlayerY;
@@ -165,6 +183,11 @@ void movePlayer(float deltaTime)
     }
 }
 
+/**
+ * Check if there is a wall in the specified direction from the player's current position.
+ *
+ * @param direction The direction to check (FRONT, RIGHT, BACK, LEFT).
+ */
 void SoundmapHasWallAtDirection(int direction){
 
     float angle = p.rotationAngle;

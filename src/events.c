@@ -4,6 +4,7 @@
 
 pthread_t thread;
 int walking = 0;
+int turning = 0;
 int h_hitted = 0;
 
 int up_key_pressed = 0;
@@ -13,9 +14,10 @@ int right_key_pressed = 0;
 bool e_pressed = false;
 
 /**
-* poll_events - getting quit event
-* Return: 1 if quitted, 0 if not.
-*/
+ * Poll SDL events and handle them.
+ *
+ * @return 1 if the game should quit, 0 otherwise.
+ */
 int poll_events(void)
 {
 	SDL_Event event;
@@ -28,8 +30,9 @@ int poll_events(void)
 				return (1);
 			case SDL_KEYDOWN: {
 				if (event.key.keysym.sym == SDLK_ESCAPE) // quite the game
-					return (1);
-
+					{
+						return (1);
+					}
 				if (event.key.keysym.sym == SDLK_z)
 				{	p.walkDirection = +1;
 					if (walking == 0)
@@ -49,7 +52,6 @@ int poll_events(void)
 						pthread_create(&thread, NULL, playSound, (void *) sound_p);
 					}
 				}
-
 				if (event.key.keysym.sym == SDLK_s)
 					{
 						p.walkDirection = -1;
@@ -74,10 +76,18 @@ int poll_events(void)
 				if (event.key.keysym.sym == SDLK_d)
 					{
 						p.turnDirection = +1;
+						if (turning == 0)
+						{
+							turning = 1;
+						}
 					}
 				if (event.key.keysym.sym == SDLK_q)
 					{
 						p.turnDirection = -1;
+						if (turning == 0)
+						{
+							turning = 1;
+						}
 					}
 				if (event.key.keysym.sym == SDLK_UP)
 					{
@@ -112,10 +122,14 @@ int poll_events(void)
 						}
 					}
 				if (event.key.keysym.sym == SDLK_LSHIFT || event.key.keysym.sym == SDLK_RSHIFT)
-				{
-					setSpeedSound(0, 4.0f);
-					p.walkSpeed = 200;
-					p.turnSpeed = 80 * (M_PI / 180);
+				{   
+					// if walking or turning
+					if (walking == 1 || turning == 1)
+					{
+						setSpeedSound(0, 4.0f);
+						p.walkSpeed = 200;
+						p.turnSpeed = 80 * (M_PI / 180);
+					}	
 				}
 				if (event.key.keysym.sym == SDLK_e)
 				{
@@ -144,8 +158,6 @@ int poll_events(void)
 					}
 					
 				}
-				
-				
 				break;
 			}
 			case SDL_KEYUP: {
@@ -173,10 +185,18 @@ int poll_events(void)
 				if (event.key.keysym.sym == SDLK_d)
 					{
 						p.turnDirection = 0;
+						if (turning == 1)
+						{
+							turning = 0;
+						}
 					}
 				if (event.key.keysym.sym == SDLK_q)
 					{
 						p.turnDirection = 0;
+						if (turning == 1)
+						{
+							turning = 0;
+						}
 					}
 				if (event.key.keysym.sym == SDLK_h)
 					{
@@ -189,8 +209,7 @@ int poll_events(void)
 				if (event.key.keysym.sym == SDLK_UP)
 					{
 						up_key_pressed = 0;
-					}
-						
+					}						
 				if (event.key.keysym.sym == SDLK_DOWN)
 					{
 						down_key_pressed = 0;
@@ -203,7 +222,7 @@ int poll_events(void)
 					{
 						left_key_pressed = 0;
 					}
-				if (event.key.keysym.sym == SDLK_LSHIFT || event.key.keysym.sym == SDLK_RSHIFT) // add this condition
+				if (event.key.keysym.sym == SDLK_LSHIFT || event.key.keysym.sym == SDLK_RSHIFT)
 				{						
 					setSpeedSound(0, 2.0f);
 					p.walkSpeed = 100;
@@ -213,7 +232,6 @@ int poll_events(void)
 				{
 					e_pressed = false;
 				}
-
 				break;
 			}
 		}

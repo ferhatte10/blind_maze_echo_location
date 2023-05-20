@@ -13,11 +13,23 @@ ALuint     buffers[SOUND_NB]; // 0 = walking, 1 = wall, 2 = exit
 float      SoundX, SoundY;
 
 
+/**
+ * Prints a fatal error message and terminates the program.
+ *
+ * @param state The error message to be displayed.
+ * 
+ * @return void
+ */
 void fatalError(char *state){
     printf("%s: %d", state, alGetError());
     exit(1);
 }
 
+/**
+ * Initializes the OpenAL sound device and context.
+ *
+ * @return void
+ */
 void initDeviceAndContext() {
     device = alcOpenDevice(NULL);
 
@@ -30,7 +42,15 @@ void initDeviceAndContext() {
         fatalError("OpenAL Error: No sound context");
 }
 
-
+/**
+ * Loads a sound file into an OpenAL buffer and creates a corresponding source.
+ *
+ * @param filename The filename of the sound file to load.
+ * @param buffer   Pointer to an ALuint variable that will hold the buffer ID.
+ * @param source   Pointer to an ALuint variable that will hold the source ID.
+ * 
+ * @return void
+ */
 void loadSound(const char* filename, ALuint *buffer, ALuint *source) {
     // Create buffer
     alGenBuffers(1, buffer);
@@ -64,6 +84,12 @@ void loadSound(const char* filename, ALuint *buffer, ALuint *source) {
     alSourcei(*source, AL_BUFFER, *buffer);
 }
 
+/**
+ * Initializes the sound system by initializing the OpenAL device and context,
+ * and loading the sound files.
+ *
+ * @return void
+ */
 void initSound() {
 
     initDeviceAndContext();
@@ -73,6 +99,11 @@ void initSound() {
     loadSound(EXIT_SOUND_PATH, &buffers[2], &sources[2]);
 }
 
+/**
+ * Closes the sound device and releases allocated resources.
+ *
+ * @return void
+ */
 void closeSoundDevice() {    
 
     // Clean up the OpenAL resources we allocated
@@ -87,6 +118,13 @@ void closeSoundDevice() {
     alutExit();
 }
 
+/**
+ * Plays a sound based on the provided arguments.
+ *
+ * @param arg Pointer to a SoundP struct containing the sound parameters.
+ * 
+ * @return void
+ */
 void *playSound(void* arg) {
     
     SoundP* sound_p = (SoundP*) arg;
@@ -156,32 +194,72 @@ void *playSound(void* arg) {
 }
 
 
-
+/**
+ * Stops the specified sound source.
+ *
+ * @param type The type of the sound source to stop.
+ *
+ * @return void
+ */
 void stopSound(int type) {
-    // stop the specified sound source
+    // Stop the specified sound source
     alSourceStop(sources[type]);
 }
 
-void pauseSound(int type)
-{
+/**
+ * Pauses the specified sound source.
+ *
+ * @param type The type of the sound source to pause.
+ *
+ * @return void
+ */
+void pauseSound(int type) {
     alSourcePause(sources[type]);
 }
 
-void resumeSound(int type)
-{
-    // if the source is not playin resume it
+/**
+ * Resumes the specified sound source if it is not currently playing.
+ *
+ * @param type The type of the sound source to resume.
+ *
+ * @return void
+ */
+void resumeSound(int type) {
+    // Check if the source is not playing, then resume it
     ALint state;
     alGetSourcei(sources[type], AL_SOURCE_STATE, &state);
     if (state != AL_PLAYING)
         alSourcePlay(sources[type]);
 }
 
-void setSpeedSound(int type, float speed)
-{
-    alSourcef(sources[type], AL_PITCH, speed);
+/**
+ * Sets the speed of the specified sound source if it is not currently playing.
+ *
+ * @param type  The type of the sound source to set the speed for.
+ * @param speed The speed value to set for the sound source.
+ *
+ * @return void
+ */
+void setSpeedSound(int type, float speed) {
+    // Set the speed of the specified sound source if it is currently playing
+    ALint state;
+    alGetSourcei(sources[type], AL_SOURCE_STATE, &state);
+    if (state == AL_PLAYING)
+    {
+        alSourcef(sources[type], AL_PITCH, speed);
+    }
 }
 
 
+/**
+ * Updates the position of the sound based on the sound source's position and the distance to the player.
+ *
+ * @param x        The x-coordinate of the sound source's position.
+ * @param y        The y-coordinate of the sound source's position.
+ * @param distance The distance between the player and the sound source.
+ *
+ * @return void
+ */
 void updateSoundPos(float x, float y, float distance){
     //Calculate the distance between the player and the exit:
     /*
@@ -220,6 +298,16 @@ void updateSoundPos(float x, float y, float distance){
     SoundY = sin(angleSound) * distance;
 }
 
+/**
+ * Sets the 3D position of the specified sound source.
+ *
+ * @param type     The type of the sound source.
+ * @param x        The x-coordinate of the sound source position.
+ * @param y        The y-coordinate of the sound source position.
+ * @param distance The distance between the player and the sound source.
+ *
+ * @return void
+ */
 void set3dPositionSound(int type, float x, float y, float distance)
 {
     updateSoundPos(x, y, distance);

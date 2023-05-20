@@ -1,4 +1,9 @@
-# Blind Maze game with ```Echo location``` hearing
+# Blind Maze game with ```Echo Location``` hearing
+
+<div style="text-align: center">
+    <img src="images/blind.png" width="400" height="400" alt="blind_maze" title="blind_maze" />
+    <img src="images/maze.png" width="400" height="400" alt="maze" title="maze" />
+</div>
 
 # Introduction
 

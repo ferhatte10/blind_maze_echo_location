@@ -4,13 +4,29 @@
 #include "../inc/constants.h"
 
 
-
+/**
+ * Calculates the distance between two points in 2D space.
+ *
+ * @param x1 The x-coordinate of the first point.
+ * @param y1 The y-coordinate of the first point.
+ * @param x2 The x-coordinate of the second point.
+ * @param y2 The y-coordinate of the second point.
+ * 
+ * @return The distance between the two points.
+ */
 float distanceBetweenPoints(float x1, float y1, float x2, float y2)
 {
 	return (sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 }
 
 
+/**
+ * Renders the map using SDL library.
+ *
+ * @param instance The SDL_Instance instance.
+ * 
+ * @return void
+ */
 void renderMap(SDL_Instance instance)
 {
 	int i, j;
@@ -36,7 +52,14 @@ void renderMap(SDL_Instance instance)
 	}
 }
 
-
+/**
+ * Renders text using SDL library.
+ *
+ * @param instance The SDL_Instance instance.
+ * @param tp The struct textPrint containing title and the subtitles to print on the screen.
+ * 
+ * @return void
+ */
 void renderText(SDL_Instance instance, struct textPrint tp)
 {
 	// Render title
@@ -90,7 +113,7 @@ void renderText(SDL_Instance instance, struct textPrint tp)
     }
     TTF_CloseFont(subTitleFont);
 
-	// render copywrite in the end of the screen
+	// render copyrite in the end of the screen
 	SDL_Color color2 = {255, 255, 255, 255};
 	TTF_Font* font2 = TTF_OpenFont("fonts/Raleway-Regular.ttf", 15);
 	SDL_Surface *surface2 = TTF_RenderText_Solid(font2, tp.subTitles[tp.numSubTexts-1], color2);

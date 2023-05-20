@@ -1,5 +1,5 @@
-#ifndef SOUND_MAZE_INCLUDES_H
-#define SOUND_MAZE_INCLUDES_H
+#ifndef _SOUND_MAZE_INCLUDES_H_
+#define _SOUND_MAZE_INCLUDES_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,4 +12,4 @@
 #include <pthread.h>
 
 
-#endif
+#endif /*_SOUND_MAZE_INCLUDES_H_*/
